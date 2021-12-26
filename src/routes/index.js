@@ -3,11 +3,14 @@ const Token = require("../libs/token")
 const router = new Router()
 const CryptoHelper = require("../libs/crypto")
 const Base64 = require("../libs/base64")
+const { UnauthorizedException } = require("../libs/error")
 
 // 接口
 router.get("/", async(ctx, next) => {
+	const test2 = "admin"
 	const test = "123456"
-	console.log(test, " 加密后 ", CryptoHelper.encodeAES(test))
+	console.log(test2, " 加密后 ", CryptoHelper.encodeAES(test2))
+	console.log(test, " 加密后 ", CryptoHelper.encodeAES(test).toUpperCase())
 
 	ctx.body = "hello"
 })
@@ -18,11 +21,13 @@ router.post("/user/login", async(ctx, next) => {
   	password: "123456"
   }
 
-  const { username, password } = ctx.request.body
+  let { username, password } = ctx.request.body
 
-	// console.log("username", username)
-  // console.log("password", password)
+ //  console.log(username, " 解密后 ", CryptoHelper.decodeAES(username))
+	// console.log(password, " 解密后 ", CryptoHelper.decodeAES(password.toLowerCase()))
 
+	// if (CryptoHelper.decodeAES(username) === userInfo.username && 
+	// 		CryptoHelper.decodeAES(password.toLowerCase()) === userInfo.password) {
   if (cryptUsernameHandle(username) === userInfo.username && 
 			cryptPasswordHandle(password) === userInfo.password) {
     // 测试
@@ -30,14 +35,16 @@ router.post("/user/login", async(ctx, next) => {
 
   	ctx.status = 200
 		ctx.body = {
-			msg: "登录成功.",
-			token
+			success: true,
+			error_code: 0,
+			data: {
+				token
+			},
+			message: "执行成功"
 		}
   } else {
-  	ctx.status = 401
-  	ctx.body = {
-  		msg: "账号或密码错误"
-  	}
+  	const err = new UnauthorizedException("账号或密码错误")
+  	throw err
   }
 })
 

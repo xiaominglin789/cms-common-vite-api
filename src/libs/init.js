@@ -1,6 +1,7 @@
 const bodyParser = require("koa-bodyparser")
 const router = require("../routes/index")
 const dotEnv = require('dotenv')
+const catchError = require("../middlewares/catch-error")
 
 class Initzation {
 
@@ -12,6 +13,7 @@ class Initzation {
   }
 
   initPlugins(app) {
+    app.use(catchError)
     // 中间件注册
     app.use(bodyParser())
     app.use(router.routes(), router.allowedMethods())
