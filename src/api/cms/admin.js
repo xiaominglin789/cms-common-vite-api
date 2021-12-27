@@ -14,7 +14,7 @@ router.post("/login", async(ctx, next) => {
 	const token = await Token.genralToken({ id: 1 })
 	ctx.body = {
 		success: true,
-		error_code: 0,
+		code: 0,
 		data: {
 			token
 		},

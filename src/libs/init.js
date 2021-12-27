@@ -2,8 +2,7 @@ const Router = require("koa-router")
 const bodyParser = require("koa-bodyparser")
 const requireDirectory = require("require-directory")
 const dotEnv = require('dotenv')
-const catchError = require("../middlewares/catch-error")
-const path = require('path')
+const catchError = require("../middlewares/catchError")
 
 class Initzation {
 
@@ -16,8 +15,8 @@ class Initzation {
 
   static initPlugins(app) {
     // 中间件注册
-    app.use(catchError)
     app.use(bodyParser())
+    app.use(catchError())
   }
 
   static initRoutes(app) {
