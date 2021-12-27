@@ -1,21 +1,12 @@
 const Router = require("koa-router")
-const Token = require("../libs/token")
-const router = new Router()
-const CryptoHelper = require("../libs/crypto")
-const Base64 = require("../libs/base64")
-const { UnauthorizedException } = require("../libs/error")
+const Token = require("../../libs/token")
+const CryptoHelper = require("../../libs/crypto")
+const Base64 = require("../../libs/base64")
+const { UnauthorizedException } = require("../../libs/error")
 
-// 接口
-router.get("/", async(ctx, next) => {
-	const test2 = "admin"
-	const test = "123456"
-	console.log(test2, " 加密后 ", CryptoHelper.encodeAES(test2))
-	console.log(test, " 加密后 ", CryptoHelper.encodeAES(test).toUpperCase())
+const router = new Router({ prefix: `${process.env.CMS_API_PREFIX}/admin` })
 
-	ctx.body = "hello"
-})
-
-router.post("/user/login", async(ctx, next) => {
+router.post("/login", async(ctx, next) => {
 	const userInfo = {
   	username: "admin",
   	password: "123456"
@@ -23,9 +14,11 @@ router.post("/user/login", async(ctx, next) => {
 
   let { username, password } = ctx.request.body
 
- //  console.log(username, " 解密后 ", CryptoHelper.decodeAES(username))
+  console.log("username: ", username)
+  console.log("password: ", password)
+  
+  // console.log(username, " 解密后 ", CryptoHelper.decodeAES(username))
 	// console.log(password, " 解密后 ", CryptoHelper.decodeAES(password.toLowerCase()))
-
 	// if (CryptoHelper.decodeAES(username) === userInfo.username && 
 	// 		CryptoHelper.decodeAES(password.toLowerCase()) === userInfo.password) {
   if (cryptUsernameHandle(username) === userInfo.username && 
@@ -56,7 +49,6 @@ function cryptUsernameHandle(msg) {
   if (!msg) return
 
   const res = CryptoHelper.decodeAES(msg)
-	console.log("username-code -> res： ", res);
   return res
 }
 
@@ -67,17 +59,8 @@ function cryptUsernameHandle(msg) {
  */
 function cryptPasswordHandle(msg) {
   if (!msg) return
-
-	console.log("原始密文: ", msg);
-	// const msgLower = msg.toLowerCase(msg)
-	// console.log("msgLower: ", msgLower);
-
 	const res = CryptoHelper.decodeAES(msg)
-	console.log("aes 解码: ", res);
-
 	const msgBase64 = Base64.decode(res)
-	console.log("msgBase64 解码: ", msgBase64);
-	
 	return msgBase64
 }
 

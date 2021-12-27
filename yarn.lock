@@ -1039,6 +1039,11 @@ registry-url@^5.0.0:
   dependencies:
     rc "^1.2.8"
 
+require-directory@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.nlark.com/require-directory/download/require-directory-2.1.1.tgz#8c64ad5fd30dab1c976e2344ffe7f792a6a6df42"
+  integrity sha1-jGStX9MNqxyXbiNE/+f3kqam30I=
+
 responselike@^1.0.2:
   version "1.0.2"
   resolved "https://registry.nlark.com/responselike/download/responselike-1.0.2.tgz#918720ef3b631c5642be068f15ade5a46f4ba1e7"
