@@ -1,8 +1,9 @@
 const Router = require("koa-router")
-const Token = require("../../libs/token")
 const CryptoHelper = require("../../libs/crypto")
 const Base64 = require("../../libs/base64")
 const { UnauthorizedException } = require("../../libs/error")
+const UserDao = require("../../service/user")
+const { loginRequired } = require("../../middlewares/auth")
 
 const router = new Router({ prefix: `${process.env.CMS_API_PREFIX}/user` })
 
@@ -15,10 +16,10 @@ router.post("/register", async(ctx, next) => {
 router.post("/login", async(ctx, next) => {
   let { username, password } = ctx.request.body
 
-  verifyLoginInfo(username, password)
+  const result = verifyLoginInfo(username, password)
   
-	const token = await Token.genralToken({ id: 1 })
-	ctx.json({ token })
+	const tokens = new UserDao().generalTokens(result)
+	ctx.body = tokens
 })
 
 /** 更新自己的信息 */
@@ -42,8 +43,19 @@ router.get("/permission", async(ctx, next) => {
 })
 
 /** 查询自己信息 */
-router.get("/information", async(ctx, next) => {
-	
+router.get("/information", loginRequired, async(ctx, next) => {
+
+	const result = {
+		nickname: "apem123",
+	  role: ['admin'],
+	  permission: {
+	    menus: ['userManage', 'roleList', 'permissionList', 'articleRanking', 'articleCreate'],
+	    points: ['distributeRole', 'importUser', 'removeUser', 'distributePermission']
+	  },
+	  avatar: 'https://picsum.photos/32/32?random=1'
+	}
+
+	ctx.body = result
 })
 
 function verifyLoginInfo(username, password) {
@@ -58,6 +70,9 @@ function verifyLoginInfo(username, password) {
 			cryptPasswordHandle(password) !== userInfo.password) {
 		throw new UnauthorizedException('账号或密码错误.')
 	}
+
+	// userInfo { id: xxx, nickname: xxx }
+	return { id: 1 }
 }
 
 /**

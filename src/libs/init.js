@@ -32,6 +32,7 @@ class Initzation {
       })
     } catch (error) {
       console.error("加载路径文件失败: path", targetPath);
+      console.error(error);
     }
   }
 

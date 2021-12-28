@@ -1,18 +1,74 @@
 /**
  * token认证 + 路由鉴权
  */
+const jwt = require('jsonwebtoken')
+const { ForbiddenException, NotFoundException } = require("../libs/error")
+const UserDao = require("../service/user");
+
 
 /** 检验是不是管理员 */
-function isAdmin() {}
+async function isAdmin(ctx) {
+  const currentUser = ctx.currentUser
+  
+  // 根据用户id去查他的角色权限,来判断
+  // TODO
 
-/** 非管理员不可访问 */
-function adminRequired() {}
+  return true
+}
+
+/**
+ * 1.令牌校验
+ * 2.识别当前用户,绑定到ctx.currentUser上
+ */
+async function doJWTCheck(ctx) {
+  if (!ctx.headers.authorization) {
+    throw new ForbiddenException()
+  }
+
+  const tokenStr = ctx.headers.authorization.replace('Bearer ', '')
+  let jwtObj
+  try {
+    jwtObj = await jwt.verify(tokenStr, String(process.env.SECRETKEY))
+  } catch(error) {
+    if (JSON.stringify(error).includes('TokenExpiredError')) {
+      throw new ForbiddenException('令牌已过期')
+    } else if (JSON.stringify(error).includes('JsonWebTokenError')) {
+      throw new ForbiddenException('非法令牌')
+    } else {
+      throw new ForbiddenException()
+    }
+  }
+
+  const { id } = jwtObj
+  // 根据id去访问数据库查出该用户
+  const user = await new UserDao().getUserById(id)
+  if (!user) {
+    throw new NotFoundException("用户不存在")
+  }
+  // 挂载
+  ctx.currentUser = user
+}
 
 /** 是否需要登录 */
-function loginRequired() {}
+async function loginRequired(ctx, next) {
+  await doJWTCheck(ctx)
+  await next()
+}
+
+/** 非管理员不可访问 */
+async function adminRequired() {
+  await doJWTCheck(ctx)
+  const is = await isAdmin()
+
+  if (!is) {
+    throw new ForbiddenException('权限不足,无法继续访问.')
+  }
+
+  await next()
+}
 
 /** 权限组鉴权 */
-function groupRequired() {}
+async function groupRequired() {}
 
 module.exports = {
   adminRequired,
