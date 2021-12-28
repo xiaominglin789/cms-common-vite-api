@@ -1,9 +1,11 @@
 const Router = require("koa-router")
 const { ParameterException } = require("../../libs/error")
 
-const router = new Router({ prefix: `${process.env.WEB_API_PREFIX}/user` })
+const router = new Router({ 
+	prefix: `${process.env.WEB_API_PREFIX}/v1/user`
+})
 
-// /web/user/login
+// test /web/user/login
 router.get("/login", async(ctx, next) => {
 	const id = ctx.query.id
 	if (!id) {
