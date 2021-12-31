@@ -3,7 +3,7 @@ const CryptoHelper = require("../../libs/crypto")
 const Base64 = require("../../libs/base64")
 const { UnauthorizedException } = require("../../libs/error")
 const UserDao = require("../../service/user")
-const { loginRequired } = require("../../middlewares/auth")
+const { loginRequired, refreshTokenHandle } = require("../../middlewares/auth")
 const jwt = require('jsonwebtoken')
 
 const router = new Router({ prefix: `${process.env.CMS_API_PREFIX}/user` })
@@ -34,7 +34,7 @@ router.put("/change_password", async(ctx, next) => {
 })
 
 /** 刷新令牌- refresh_token -> access_token */
-router.get("/refresh", loginRequired, async(ctx, next) => {
+router.get("/refresh", refreshTokenHandle, async(ctx, next) => {
 	const currentUser = ctx.currentUser
 	console.log(currentUser, ' 申请新令牌')
 	const accessToken = jwt.sign({ id: currentUser.id }, String(process.env.SECRETKEY),
