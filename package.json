@@ -12,6 +12,7 @@
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.4",
     "koa-bodyparser": "^4.3.0",
+    "koa-cors": "^0.0.16",
     "koa-router": "^10.1.1",
     "require-directory": "^2.1.1"
   },

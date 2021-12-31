@@ -22,10 +22,12 @@ async function isAdmin(ctx) {
  */
 async function doJWTCheck(ctx) {
   if (!ctx.headers.authorization) {
+    console.log("------没有携带令牌----")
     throw new ForbiddenException()
   }
 
   const tokenStr = ctx.headers.authorization.replace('Bearer ', '')
+  console.log("校验令牌: ", tokenStr)
   let jwtObj
   try {
     jwtObj = await jwt.verify(tokenStr, String(process.env.SECRETKEY))

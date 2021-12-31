@@ -16,25 +16,24 @@ function catchError() {
 					code: 0,
 					data: ctx.response.body || "",
 					message: "ok",
-					request: `${ctx.method} $${ctx.path}`
+					request: `${ctx.method} ${ctx.path}`
 				}
 			}
 		} catch (error) {
-			// 处理异常的格式统一
-			// if (process.env.NODE_ENV === 'development') {
-			// 	throw error
-			// }
-
 			if (error instanceof HttpException) {
 				ctx.body = {
 					success: false,
 					code: error.code,
 					data: "",
 					message: error.message,
-					request: `${ctx.method} $${ctx.path}`
+					request: `${ctx.method} ${ctx.path}`
 				}
 				ctx.status = error.status
 			} else {
+				if (process.env.NODE_ENV === 'development') {
+					throw error
+				}
+				
 				ctx.body = {
 					success: false,
 					code: 999,

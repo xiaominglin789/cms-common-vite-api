@@ -4,10 +4,6 @@ class CryptoHelper {
 
   constructor() {}
 
-  getCipher() {
-    return crypto.getCiphers()
-  }
-
   /**
    * aes加密
    * @param {*} key
@@ -16,13 +12,17 @@ class CryptoHelper {
    encodeAES(msg, type="aes-256-cbc") {
     if (!msg) return
 
-    const cipherived = crypto.createCipheriv(
-      type,
-      String(process.env.AESKEY32),
-      String(process.env.AESIV16)
-    )
+    try {
+      const cipherived = crypto.createCipheriv(
+        type,
+        String(process.env.AESKEY32),
+        String(process.env.AESIV16)
+      )
 
-    return  cipherived.update(msg, 'utf8', 'hex') + cipherived.final('hex')
+      return cipherived.update(msg, 'utf8', 'hex') + cipherived.final('hex')
+    } catch(error) {
+      throw error
+    }
   }
 
   /**
@@ -34,11 +34,16 @@ class CryptoHelper {
   decodeAES(msg, type="aes-256-cbc") {
     if(!msg) return
 
-    const cipher = crypto.createDecipheriv(
-      type,
-      String(process.env.AESKEY32),
-      String(process.env.AESIV16))
-    return  cipher.update(msg, 'hex', 'utf8') + cipher.final('utf8')
+    try {
+      const cipher = crypto.createDecipheriv(
+        type, 
+        String(process.env.AESKEY32), 
+        String(process.env.AESIV16)
+      )
+      return cipher.update(msg, 'hex', 'utf8') + cipher.final('utf8')
+    } catch(error) {
+      throw error
+    }
   }
 }
 

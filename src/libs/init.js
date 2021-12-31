@@ -3,6 +3,8 @@ const bodyParser = require("koa-bodyparser")
 const requireDirectory = require("require-directory")
 const dotEnv = require('dotenv')
 const catchError = require("../middlewares/catchError")
+// const cross = require("../middlewares/cross")
+const cors = require("koa-cors")
 
 class Initzation {
 
@@ -15,6 +17,7 @@ class Initzation {
 
   static initPlugins(app) {
     // 中间件注册
+    app.use(cors())
     app.use(bodyParser())
     app.use(catchError())
   }

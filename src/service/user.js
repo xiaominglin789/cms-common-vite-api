@@ -2,6 +2,12 @@ const tokenHelper = require('../libs/token')
 
 /** 用户业务操作 */
 class UserDao {
+	/** 只生成accessToken */
+	genralAccessToken(payload) {
+		const access_token = tokenHelper.genralAccessToken(payload)
+		return { access_token }
+	}
+
 	/** 生成双令牌 */
 	generalTokens(payload) {
 		const access_token = tokenHelper.genralAccessToken(payload)
