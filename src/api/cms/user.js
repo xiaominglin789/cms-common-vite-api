@@ -4,7 +4,6 @@ const Base64 = require("../../libs/base64")
 const { UnauthorizedException } = require("../../libs/error")
 const UserDao = require("../../service/user")
 const { loginRequired, refreshTokenHandle } = require("../../middlewares/auth")
-const jwt = require('jsonwebtoken')
 
 const router = new Router({ prefix: `${process.env.CMS_API_PREFIX}/user` })
 
@@ -37,13 +36,8 @@ router.put("/change_password", async(ctx, next) => {
 router.get("/refresh", refreshTokenHandle, async(ctx, next) => {
 	const currentUser = ctx.currentUser
 	console.log(currentUser, ' 申请新令牌')
-	const accessToken = jwt.sign({ id: currentUser.id }, String(process.env.SECRETKEY),
-      {
-        expiresIn: 1
-      }
-    )
-	console.log("生成新令牌: ", accessToken)
-	ctx.body = accessToken
+	const tokens = new UserDao().generalTokens({ id: currentUser.id })
+	ctx.body = tokens
 })
 
 /** 查询自己的权限 */

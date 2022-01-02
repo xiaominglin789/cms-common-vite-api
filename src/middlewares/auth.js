@@ -54,6 +54,7 @@ async function doJWTCheck(ctx) {
  * refresh刷新令牌的单独拦截器处理
  */
 async function refreshTokenHandle(ctx, next) {
+  console.log(ctx)
   if (!ctx.headers.authorization) {
     throw new ParameterException("")
   }
@@ -63,7 +64,7 @@ async function refreshTokenHandle(ctx, next) {
   try {
     jwtObj = await jwt.verify(tokenStr, String(process.env.SECRETKEY))
   } catch(error) {
-    throw new ForbiddenException(''， 403039)
+    throw new ForbiddenException('', 403039)
   }
 
   const { id } = jwtObj
