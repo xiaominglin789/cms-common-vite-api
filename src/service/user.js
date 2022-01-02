@@ -153,15 +153,17 @@ class UserDao {
 		// userModel,roleModel,permissionModel
 
 		const role = ['admin']
-		
+		const menus = this.__calculateUserAllowMenu()
+    const points = []
+    
 		const permission = [
-			menus: this.__calculateUserAllowMenu()
+			menus,
 			points
 		]
 
 		return {
 			role,
-			permission: 
+			permission
 		}
 	}
 

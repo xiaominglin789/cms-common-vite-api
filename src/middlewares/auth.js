@@ -29,7 +29,7 @@ async function doJWTCheck(ctx) {
   console.log("校验令牌: ", tokenStr)
   let jwtObj
   try {
-    jwtObj = await jwt.verify(tokenStr, String(process.env.SECRETKEY))
+    jwtObj = jwt.verify(tokenStr, String(process.env.SECRETKEY))
   } catch(error) {
     if (JSON.stringify(error).includes('TokenExpiredError')) {
       throw new ForbiddenException('令牌已过期')

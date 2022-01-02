@@ -47,14 +47,16 @@ router.get("/permission", async(ctx, next) => {
 
 /** 查询自己信息 */
 router.get("/information", loginRequired, async(ctx, next) => {
+	const currentUser = ctx.currentUser
+	console.log(currentUser)
+	
+	const { role, permission } = await new UserDao().getUserPermissionById(currentUser.id)
+
 	const result = {
 		nickname: "apem123",
-	  role: ['admin'],
-	  permission: {
-	    menus: ['userManage', 'roleList', 'permissionList', 'articleRanking', 'articleCreate'],
-	    points: ['distributeRole', 'importUser', 'removeUser', 'distributePermission']
-	  },
-	  avatar: 'https://picsum.photos/32/32?random=1'
+	  avatar: 'https://picsum.photos/32/32?random=1',
+	  role,
+	  permission
 	}
 
 	ctx.body = result
