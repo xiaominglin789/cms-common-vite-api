@@ -3,7 +3,7 @@
  */
 const jwt = require('jsonwebtoken')
 const { ForbiddenException, UnauthorizedException, NotFoundException, ParameterException } = require("../libs/error")
-const UserDao = require("../service/user");
+const { UserService } = require("../service/userService");
 
 
 /** 检验是不是管理员 */
@@ -42,7 +42,7 @@ async function doJWTCheck(ctx) {
 
   const { id } = jwtObj
   // 根据id去访问数据库查出该用户
-  const user = await new UserDao().getUserById(id)
+  const user = await new UserService().getUserById(id)
   if (!user) {
     throw new NotFoundException("用户不存在")
   }
@@ -69,7 +69,7 @@ async function refreshTokenHandle(ctx, next) {
 
   const { id } = jwtObj
   // 根据id去访问数据库查出该用户
-  const user = await new UserDao().getUserById(id)
+  const user = await new UserService().getUserById(id)
   if (!user) {
     throw new NotFoundException("用户不存在")
   }

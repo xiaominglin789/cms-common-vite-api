@@ -1,4 +1,6 @@
 const Router = require("koa-router")
+const { AdminService } = require("../../service/adminService")
+const { adminRequired } = require('../../middlewares/auth')
 
 const router = new Router({ prefix: `${process.env.CMS_API_PREFIX}/admin` })
 
@@ -7,9 +9,20 @@ router.get("/permission", async(ctx, next) => {
 
 })
 
-/** 查询所有用户 */ 
-router.get("/user", async(ctx, next) => {
+/**
+ * 查询所有用户
+ * @param page 页数
+ * @param size 每页条数
+ */
+router.get("/users", adminRequired, async(ctx, next) => {
+  console.log(ctx.request.query);
+  
+  const { page, size } = ctx.request.query
+  if (!page) { page = 1 }
+  if (!size) { size = 1 }
+  const result = new AdminService().getUserListByPage(Number(page), Number(size))
 
+  ctx.body = result
 })
 
 /** 修改用户密码 */ 

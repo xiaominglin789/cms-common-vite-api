@@ -2,7 +2,7 @@ const Router = require("koa-router")
 const CryptoHelper = require("../../libs/crypto")
 const Base64 = require("../../libs/base64")
 const { UnauthorizedException } = require("../../libs/error")
-const UserDao = require("../../service/user")
+const { UserService } = require("../../service/userService")
 const { loginRequired, refreshTokenHandle } = require("../../middlewares/auth")
 
 const router = new Router({ prefix: `${process.env.CMS_API_PREFIX}/user` })
@@ -18,7 +18,7 @@ router.post("/login", async(ctx, next) => {
 
   const result = verifyLoginInfo(username, password)
   
-	const tokens = new UserDao().generalTokens(result)
+	const tokens = new UserService().generalTokens(result)
 	ctx.body = tokens
 })
 
@@ -36,7 +36,7 @@ router.put("/change_password", async(ctx, next) => {
 router.get("/refresh", refreshTokenHandle, async(ctx, next) => {
 	const currentUser = ctx.currentUser
 	console.log(currentUser, ' 申请新令牌')
-	const tokens = new UserDao().generalTokens({ id: currentUser.id })
+	const tokens = new UserService().generalTokens({ id: currentUser.id })
 	ctx.body = tokens
 })
 
@@ -49,8 +49,7 @@ router.get("/permission", async(ctx, next) => {
 router.get("/information", loginRequired, async(ctx, next) => {
 	const currentUser = ctx.currentUser
 	console.log(currentUser)
-	
-	const { role, permission } = await new UserDao().getUserPermissionById(currentUser.id)
+	const { role, permission } = await new UserService().getUserPermissionById(currentUser.id)
 
 	const result = {
 		nickname: "apem123",
