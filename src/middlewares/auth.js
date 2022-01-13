@@ -85,9 +85,9 @@ async function loginRequired(ctx, next) {
 }
 
 /** 非管理员不可访问 */
-async function adminRequired() {
+async function adminRequired(ctx, next) {
   await doJWTCheck(ctx)
-  const is = await isAdmin()
+  const is = await isAdmin(ctx)
 
   if (!is) {
     throw new ForbiddenException('权限不足,无法继续访问.')
@@ -97,7 +97,7 @@ async function adminRequired() {
 }
 
 /** 权限组鉴权 */
-async function groupRequired() {}
+async function groupRequired(ctx, next) {}
 
 module.exports = {
   adminRequired,
