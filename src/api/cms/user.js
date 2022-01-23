@@ -4,6 +4,7 @@ const Base64 = require("../../libs/base64")
 const { UnauthorizedException } = require("../../libs/error")
 const { UserService } = require("../../service/userService")
 const { loginRequired, refreshTokenHandle } = require("../../middlewares/auth")
+const { getClientIp } = require("../../libs/utils");
 
 const router = new Router({ prefix: `${process.env.CMS_API_PREFIX}/user` })
 
@@ -55,7 +56,9 @@ router.get("/information", loginRequired, async(ctx, next) => {
 		nickname: "apem123",
 	  avatar: 'https://picsum.photos/32/32?random=1',
 	  role,
-	  permission
+	  permission,
+	  ip: getClientIp(ctx),
+	  login_time: Date.now()
 	}
 
 	ctx.body = result
