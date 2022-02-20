@@ -5,17 +5,17 @@ const { allowMenus: userAllowMenus } = require('../config/userAllowMenus')
 class UserService {
 	/** 只生成accessToken */
 	genralAccessToken(payload) {
-		const access_token = tokenHelper.genralAccessToken(payload)
-		return { access_token }
+		const accessToken = tokenHelper.genralAccessToken(payload)
+		return { accessToken }
 	}
 
 	/** 生成双令牌 */
 	generalTokens(payload) {
-		const access_token = tokenHelper.genralAccessToken(payload)
-		const refresh_token = tokenHelper.genralRefreshToken(payload)
+		const accessToken = tokenHelper.genralAccessToken(payload)
+		const refreshToken = tokenHelper.genralRefreshToken(payload)
 		return {
-			access_token,
-			refresh_token
+			accessToken,
+			refreshToken
 		}
 	}
 

@@ -1,4 +1,4 @@
-const errorCode {
+const errorCode = {
 	REFRESH_FAULE: '403039'
 }
 
